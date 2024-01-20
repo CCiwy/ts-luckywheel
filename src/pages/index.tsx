@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Wheel from "./Wheel";
+import Wheel from "../components/Wheel";
 
 const WheelInputForm: React.FC = () => {
     const handleAction = (e: Event) => {

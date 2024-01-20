@@ -1,14 +1,5 @@
-import React, { useState } from "react";
 import Head from "next/head";
-
-interface WheelProps {
-    
-}
-
-const Wheel: React.FC<WheelProps> = () => {
-    const [entries, setEntries] = useState<string[]>([]);
-    return (<div>WHEEL GOES HERE</div>)
-}
+import Wheel from "./Wheel";
 
 const WheelInputForm: React.FC = () => {
     const handleAction = (e: Event) => {

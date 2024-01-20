@@ -25,16 +25,6 @@ function getCirclePoint(middle: Vec2, radius: number, alpha: number) {
 }
 
 
-    function createSliceText(m: Vec2, radius: number, value: string, angle: number) {
-        const p = getCirclePoint(m, radius, angle); // maybe use radius * 0.8
-        const textElem = document.createElementNS(SVG_NS, 'text');
-        textElem.textContent = value;
-        textElem.setAttribute('x', p.x.toString());
-        textElem.setAttribute('y', p.y.toString());
-        textElem.setAttribute('transform', `rotate(${-90 + angle} ${p.x} ${p.y})`);
-        textElem.setAttribute('fill', 'white');
-        return textElem;
-    }
 
 
 interface WheelProps {
@@ -58,23 +48,34 @@ const WheelSlice: React.FC<SliceProps> = (props) => {
     const beta = alpha + props.sliceAngle;
     const p1 = getCirclePoint(middle, radius, alpha);
     const p2 = getCirclePoint(middle, radius, beta);
-    const  largeArcFlag = props.sliceAngle <= 180 ? '0' : '1';
-
+    const largeArcFlag = props.sliceAngle <= 180 ? '0' : '1';
     const d = `
             M ${middle.x} ${middle.y}
             L ${p1.x} ${p1.y}
             A ${radius} ${radius} 0 ${largeArcFlag} 1 ${p2.x}, ${p2.y}
             Z`;
 
-            //slice.setAttributeNS(null, 'stroke', 'black');
-            //slice.setAttributeNS(null, 'stroke-width', '2');
-            //slice.setAttributeNS(null, 'transform', `rotate(${-90 + alpha} ${m.x} ${m.y})`);
-            //parent?.appendChild(slice);
-            //const angleBetween = alpha + 0.5 * sliceAngle;
-            //const textElem = createSliceText(value, angleBetween);
-            //parent?.appendChild(slice); 
-            //parent?.appendChild(textElem); 
-    return (<path d={d} fill={props.color} stroke='black'></path>)
+    // calculate the position of the text
+    const angleBetweenPoints = 0.5 * (alpha + beta);
+    const textAnchorPoint = getCirclePoint(middle, 0.5 * radius, angleBetweenPoints); // maybe use radius * 0.8
+    const transformation = `rotate(${-90 + angleBetweenPoints} ${textAnchorPoint.x} ${textAnchorPoint.y})`;
+    
+    return (
+        <>
+            <path d={d} fill={props.color} stroke='black' strokeWidth="2">
+
+            </path>
+            <text
+                x={textAnchorPoint.x}
+                y={textAnchorPoint.y}
+                fill='white'
+                transform={transformation}
+                >
+
+                {props.value}
+
+            </text> 
+        </>)
 }
 
 
@@ -82,7 +83,7 @@ const Wheel: React.FC<WheelProps> = () => {
     const radius = 200;
     const m: Vec2 = {x: radius, y: radius}
     const parentIdent = 'wheel';
-    const initalValues = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const initalValues = ['alfred', 'batman', 'clown', 'dota2', 'elephant', 'freddy', 'google', 'help'];
     const colors = ['red', 'green', 'blue', 'yellow', 'pink', 'purple', 'orange', 'brown'];
     const [values, setValues] = useState<string[]>(initalValues);
 
@@ -90,7 +91,7 @@ const Wheel: React.FC<WheelProps> = () => {
     return (
     <div>
         <h1>Spin the Wheel</h1>
-        <svg id={parentIdent} width={radius * 2} height={radius * 2}>
+        <svg id={parentIdent} width={radius * 3} height={radius * 3}>
             { values.map((value, i) => {
                 const sliceAngle = 360 / values.length;
                 const alpha = sliceAngle * i

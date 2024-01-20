@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-const SVG_NS = "http://www.w3.org/2000/svg";
 
 interface Vec2 {
     x: number;
@@ -23,7 +22,6 @@ function getCirclePoint(middle: Vec2, radius: number, alpha: number) {
         };
     return result;
 }
-
 
 
 
@@ -82,16 +80,41 @@ const WheelSlice: React.FC<SliceProps> = (props) => {
 const Wheel: React.FC<WheelProps> = () => {
     const radius = 200;
     const m: Vec2 = {x: radius, y: radius}
-    const parentIdent = 'wheel';
+    const wheelIdent = 'wheel';
     const initalValues = ['alfred', 'batman', 'clown', 'dota2', 'elephant', 'freddy', 'google', 'help'];
     const colors = ['red', 'green', 'blue', 'yellow', 'pink', 'purple', 'orange', 'brown'];
     const [values, setValues] = useState<string[]>(initalValues);
+    const [finished, setFinished] = useState<boolean>(false);
+    const [offset, setOffset] = useState<number>(0);
 
+    function handleClick(e: Event) {
+        e.preventDefault();
+        // spin the wheel
+        let wheel = document.getElementById(wheelIdent);
+        if (wheel === null) {
+        return;}
+
+        const spinAmount = Math.random() * 100;
+        const spinDegree = 360 + spinAmount * Math.floor(Math.random() * 360);
+        const spinOffset = spinDegree % 360;
+
+        // set the offset
+        wheel?.style.setProperty('--spin-degree', `${spinDegree}deg`);
+        wheel?.classList.remove('wheel__not_spinning');
+        wheel?.classList.add('wheel__spinning');
+        setTimeout(() => {
+            wheel.style.transform = `rotate(${offset}deg)`
+            setOffset(offset);
+            setFinished(true);
+        }, 1985)
+        
+    }
 
     return (
-    <div>
+    <div id="wheel__wrapper">
         <h1>Spin the Wheel</h1>
-        <svg id={parentIdent} width={radius * 3} height={radius * 3}>
+        <div id={wheelIdent} width={radius*2} height={radius*2}>
+        <svg id="wheel_svg" width={radius * 2} height={radius * 2}>
             { values.map((value, i) => {
                 const sliceAngle = 360 / values.length;
                 const alpha = sliceAngle * i
@@ -99,6 +122,8 @@ const Wheel: React.FC<WheelProps> = () => {
             })
         }
         </svg>
+        </div>
+        <button onClick={(e) => handleClick(e)}> SPIN </button>
     </div>
     );
 }

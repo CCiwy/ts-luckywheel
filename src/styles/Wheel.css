@@ -1,0 +1,39 @@
+h1 {
+    text-align: center;
+}
+
+#wheel__wrapper {
+    background-color: grey;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    align-self: center;
+}
+
+
+#wheel {
+    width: 410px;
+    height: 410px;
+    display: flex;
+}
+
+#wheel_svg {
+    align-self: center;
+}
+
+@keyframes spinWheel {
+    from {
+        transform: rotate(0);
+    } to {
+        transform: rotate(var(--spin-degree));
+    } 
+}
+
+
+.wheel__not_spinning {
+    transform: rotate(0);
+}
+
+.wheel__spinning {
+  animation: spinWheel 2s ease-in-out;
+}

@@ -8,6 +8,23 @@ interface Vec2 {
 } 
 
 
+function getCirclePoint(middle: Vec2, radius: number: alpha: number) {
+    /*
+    calculate the x,y coordinates of a point on a circle
+    given the circle's middle point, radius, and angle
+    Note: this only works for SVG
+    because in SVG 0 degress points to the right
+    while in trigonometry 0 degrees points upward
+    */
+    const radians = alpha * Math.PI / 180;
+    const result: Vec2 = {
+        x: middle.x + radius * Math.cos(radians),
+        y: middle.y - radius * Math.sin(radians)
+        };
+    return result;
+}
+
+
 interface WheelProps {
     }
 

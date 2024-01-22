@@ -1,5 +1,5 @@
 CODE MAINTENANCE:
-[ ] typehinting
+[ ] type warnings
 
 
 BUGS:

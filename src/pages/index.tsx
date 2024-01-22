@@ -1,3 +1,4 @@
+import {useState} from "react";
 import Head from "next/head";
 import Wheel from "../components/Wheel";
 import WheelForm from "../components/WheelForm";
@@ -5,6 +6,11 @@ import WheelForm from "../components/WheelForm";
 
 
 export default function Home() {
+    const [values, setValues] = useState<string[]>([]);
+    const updateValues = (values: string[]) => {
+        setValues(values);
+    }
+
     return (
         <>
             <Head>
@@ -15,8 +21,8 @@ export default function Home() {
             </Head>
             <main>
                 <h1>HI CHAT</h1>
-                <WheelForm />
-                <Wheel />
+                <WheelForm callback={updateValues}/>
+                <Wheel values={values}/>
             </main>
         </>
     );

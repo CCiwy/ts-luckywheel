@@ -86,6 +86,7 @@ const Wheel: React.FC<WheelProps> = () => {
     const [values, setValues] = useState<string[]>(initalValues);
     const [finished, setFinished] = useState<boolean>(false);
     const [offset, setOffset] = useState<number>(0);
+    const [lastResult, setLastResult] = useState<string>('');
 
     function handleClick(e: Event) {
         e.preventDefault();
@@ -96,19 +97,34 @@ const Wheel: React.FC<WheelProps> = () => {
 
         const spinAmount = Math.random() * 100;
         const spinDegree = 360 + spinAmount * Math.floor(Math.random() * 360);
-        const spinOffset = spinDegree % 360;
+        const _offset = spinDegree < 360  ? spinDegree : spinDegree % 360;
 
         // set the offset
         wheel?.style.setProperty('--spin-degree', `${spinDegree}deg`);
         wheel?.classList.remove('wheel__not_spinning');
         wheel?.classList.add('wheel__spinning');
+
         setTimeout(() => {
-            wheel.style.transform = `rotate(${offset}deg)`
-            setOffset(offset);
+            wheel.style.transform = `rotate(${_offset}deg)`
+            setOffset(_offset);
             setFinished(true);
         }, 1985)
         
     }
+
+
+    function getSliceAngle() {
+        return 360 / values.length;
+    }
+
+    useEffect(() => {
+        if (!finished){
+            return
+        }
+        const resultIndex = values.length - Math.floor(offset/getSliceAngle()) - 1;
+        setLastResult(values[resultIndex]);
+
+    }, [finished])
 
     return (
     <div id="wheel__wrapper">
@@ -116,17 +132,28 @@ const Wheel: React.FC<WheelProps> = () => {
         <div id={wheelIdent} width={radius*2} height={radius*2}>
         <svg id="wheel_svg" width={radius * 2} height={radius * 2}>
             { values.map((value, i) => {
-                const sliceAngle = 360 / values.length;
-                const alpha = sliceAngle * i
+                let sliceAngle = getSliceAngle();
+                const alpha = sliceAngle * i;
                 return <WheelSlice key={i} value={value} offsetAngle={alpha} sliceAngle={sliceAngle} radius={radius} middle={m} color={colors[i]} />
             })
         }
         </svg>
         </div>
         <button onClick={(e) => handleClick(e)}> SPIN </button>
+        { lastResult.length > 0 ? <ShowResult result={lastResult} /> : <></> } 
     </div>
     );
 }
 
+interface ResultProps {
+    result: string
+}
+
+const ShowResult: ResultProps = (props) => { 
+    return (
+       <h3>Last Result: { props.result } </h3>
+    )
+
+}
 
 export default Wheel;

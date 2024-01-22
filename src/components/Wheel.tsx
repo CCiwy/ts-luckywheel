@@ -88,6 +88,18 @@ const Wheel: React.FC<WheelProps> = () => {
     const [offset, setOffset] = useState<number>(0);
     const [lastResult, setLastResult] = useState<string>('');
 
+
+    function handleReset(e: Event){
+        e.preventDefault();
+        setFinished(false);
+        setOffset(0);
+        let wheel = document.getElementById(wheelIdent);
+        wheel?.classList.remove('wheel__spinning');
+        wheel?.classList.add('wheel__not_spinning');
+        wheel.style.transform = `rotate(0deg)`;
+    }
+
+
     function handleClick(e: Event) {
         e.preventDefault();
         // spin the wheel
@@ -139,7 +151,9 @@ const Wheel: React.FC<WheelProps> = () => {
         }
         </svg>
         </div>
-        <button onClick={(e) => handleClick(e)}> SPIN </button>
+         { finished ?
+         <button onClick={(e) => handleReset(e)}> RESET </button>
+         : <button onClick={(e) => handleClick(e)}> SPIN </button>  } 
         { lastResult.length > 0 ? <ShowResult result={lastResult} /> : <></> } 
     </div>
     );
@@ -149,7 +163,7 @@ interface ResultProps {
     result: string
 }
 
-const ShowResult: ResultProps = (props) => { 
+const ShowResult: React.FC = (props: ResultProps) => { 
     return (
        <h3>Last Result: { props.result } </h3>
     )

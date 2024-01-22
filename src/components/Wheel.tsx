@@ -39,8 +39,9 @@ interface SliceProps {
 const WheelSlice: React.FC<SliceProps> = (props) => {
     const middle = props.middle;
     const radius = props.radius;
+    // if props.sliceangle is 360, then the slice is a full circle. To draw a circle we need to make beta smaller than 360°
     const alpha = props.offsetAngle;
-    const beta = alpha + props.sliceAngle;
+    const beta = props.sliceAngle !== 360 ? alpha + props.sliceAngle : 359.99;
     const p1 = getCirclePoint(middle, radius, alpha);
     const p2 = getCirclePoint(middle, radius, beta);
     const largeArcFlag = props.sliceAngle <= 180 ? '0' : '1';
@@ -49,7 +50,6 @@ const WheelSlice: React.FC<SliceProps> = (props) => {
             L ${p1.x} ${p1.y}
             A ${radius} ${radius} 0 ${largeArcFlag} 1 ${p2.x}, ${p2.y}
             Z`;
-
     // calculate the position of the text
     const angleBetweenPoints = 0.5 * (alpha + beta);
     const textAnchorPoint = getCirclePoint(middle, 0.5 * radius, angleBetweenPoints); // maybe use radius * 0.8

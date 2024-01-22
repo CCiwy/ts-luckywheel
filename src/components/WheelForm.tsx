@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 
-
 interface WheelFormProps {
     callback: (values: string[]) => void;
     }
@@ -16,7 +15,7 @@ const initalValues = {
     f6: ''
 }
 
-const WheelForm: React.FC = (props) => {
+const WheelForm: React.FC<WheelFormProps> = (props) => {
     const updateValues = props.callback;
     const [values, setValues] = useState<Object>(initalValues);
 
@@ -27,10 +26,9 @@ const WheelForm: React.FC = (props) => {
     }, [values]);
 
 
-
-
-    const handleChange = (e: Event) => {
-        setValues({...values, [e.target.id]: e.target.value})
+    const handleChange = (e: React.ChangeEvent) => {
+        let target = e.target as HTMLInputElement;
+        setValues({...values, [target.id]: target.value})
     }
 
     return (<div>

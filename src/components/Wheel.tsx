@@ -91,18 +91,18 @@ const Wheel: React.FC<WheelProps> = (props) => {
     const [lastResult, setLastResult] = useState<string>('');
 
 
-    function handleReset(e: Event){
+    function handleReset(e: React.MouseEvent<HTMLButtonElement, MouseEvent>){
         e.preventDefault();
         setFinished(false);
         setOffset(0);
         let wheel = document.getElementById(wheelIdent);
         wheel?.classList.remove('wheel__spinning');
         wheel?.classList.add('wheel__not_spinning');
-        wheel.style.transform = `rotate(0deg)`;
+        wheel!.style.transform = `rotate(0deg)`;
     }
 
 
-    function handleClick(e: Event) {
+    function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault();
         // spin the wheel
         let wheel = document.getElementById(wheelIdent);
@@ -119,7 +119,7 @@ const Wheel: React.FC<WheelProps> = (props) => {
         wheel?.classList.add('wheel__spinning');
 
         setTimeout(() => {
-            wheel.style.transform = `rotate(${_offset}deg)`
+            wheel!.style.transform = `rotate(${_offset}deg)`
             setOffset(_offset);
             setFinished(true);
         }, 1985)
@@ -128,6 +128,7 @@ const Wheel: React.FC<WheelProps> = (props) => {
 
 
     function getSliceAngle() {
+        if (values === undefined || !values.length) {return 1}
         return 360 / values.length;
     }
 
@@ -135,18 +136,18 @@ const Wheel: React.FC<WheelProps> = (props) => {
         if (!finished){
             return
         }
-        const resultIndex = values.length - Math.floor(offset/getSliceAngle()) - 1;
-        if (!values.length) {return}
+        if (values === undefined || !values.length) {return}
+        let r = getSliceAngle();
+        const resultIndex = values!.length - Math.floor(offset/r) - 1;
         setLastResult(values[resultIndex]);
-
     }, [finished])
 
     return (
     <div id="wheel__wrapper">
         <h1>Spin the Wheel</h1>
-        <div id={wheelIdent} width={radius*2} height={radius*2}>
+        <div id={wheelIdent} style={{width: radius*2, height: radius*2}}>
         <svg id="wheel_svg" width={radius * 2} height={radius * 2}>
-            { values.map((value, i) => {
+            { values?.map((value, i) => {
                 let sliceAngle = getSliceAngle();
                 const alpha = sliceAngle * i;
                 return <WheelSlice key={i} value={value} offsetAngle={alpha} sliceAngle={sliceAngle} radius={radius} middle={m} color={colors[i]} />
@@ -166,7 +167,7 @@ interface ResultProps {
     result: string
 }
 
-const ShowResult: React.FC = (props: ResultProps) => { 
+const ShowResult: React.FC<ResultProps> = (props) => { 
     return (
        <h3>Last Result: { props.result } </h3>
     )

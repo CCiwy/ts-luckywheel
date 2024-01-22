@@ -84,7 +84,7 @@ const Wheel: React.FC<WheelProps> = (props) => {
     const wheelIdent = 'wheel';
     
 
-    const values = props.values?.length ? props.values : ['alfred', 'batman', 'clown', 'dota2', 'elephant', 'freddy', 'google', 'help'];
+    const values = props.values;
     const colors = ['red', 'green', 'blue', 'yellow', 'pink', 'purple', 'orange', 'brown'];
     const [finished, setFinished] = useState<boolean>(false);
     const [offset, setOffset] = useState<number>(0);
@@ -136,6 +136,7 @@ const Wheel: React.FC<WheelProps> = (props) => {
             return
         }
         const resultIndex = values.length - Math.floor(offset/getSliceAngle()) - 1;
+        if (!values.length) {return}
         setLastResult(values[resultIndex]);
 
     }, [finished])

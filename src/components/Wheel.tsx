@@ -25,9 +25,6 @@ function getCirclePoint(middle: Vec2, radius: number, alpha: number) {
 
 
 
-interface WheelProps {
-    }
-
 
 interface SliceProps {
     value: string;
@@ -76,14 +73,19 @@ const WheelSlice: React.FC<SliceProps> = (props) => {
         </>)
 }
 
+interface WheelProps {
+    values?: string[];
+}
 
-const Wheel: React.FC<WheelProps> = () => {
+
+const Wheel: React.FC<WheelProps> = (props) => {
     const radius = 200;
     const m: Vec2 = {x: radius, y: radius}
     const wheelIdent = 'wheel';
-    const initalValues = ['alfred', 'batman', 'clown', 'dota2', 'elephant', 'freddy', 'google', 'help'];
+    
+
+    const values = props.values?.length ? props.values : ['alfred', 'batman', 'clown', 'dota2', 'elephant', 'freddy', 'google', 'help'];
     const colors = ['red', 'green', 'blue', 'yellow', 'pink', 'purple', 'orange', 'brown'];
-    const [values, setValues] = useState<string[]>(initalValues);
     const [finished, setFinished] = useState<boolean>(false);
     const [offset, setOffset] = useState<number>(0);
     const [lastResult, setLastResult] = useState<string>('');
